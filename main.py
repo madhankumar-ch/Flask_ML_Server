@@ -1,11 +1,8 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import joblib
-import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-df = pd.read_csv(os.path.join(BASE_DIR, "data", "stores_sales_forecasting.csv"), encoding='latin1')
+df = pd.read_csv("../data/stores_sales_forecasting.csv", encoding='latin1')
 df.drop(columns=['Order ID', 'Ship Date', 'Ship Mode', 'Customer ID', 'Customer Name', 'Segment','Country', 'City', 'State', 'Postal Code', 'Region', 'Product ID', 'Category', 'Sub-Category', 'Product Name'], inplace=True)
 df.drop_duplicates(inplace=True)
 df['Order Date'] = pd.to_datetime(df['Order Date'])
@@ -13,7 +10,7 @@ df.set_index('Order Date', inplace=True)
 monthly_sales = df['Sales'].resample('ME').sum()
 
 # load model
-model = joblib.load(os.path.join(BASE_DIR, "model", "furniture_sales_forecast_model"))
+model = joblib.load("../model/furniture_sales_forecast_model")
 
 # init fastapi
 app = Flask(__name__)
