@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import joblib
+from flask_cors import CORS
 
 df = pd.read_csv("data/stores_sales_forecasting.csv", encoding='latin1')
 df.drop(columns=['Order ID', 'Ship Date', 'Ship Mode', 'Customer ID', 'Customer Name', 'Segment','Country', 'City', 'State', 'Postal Code', 'Region', 'Product ID', 'Category', 'Sub-Category', 'Product Name'], inplace=True)
@@ -14,6 +15,7 @@ model = joblib.load("model/furniture_sales_forecast_model")
 
 # init fastapi
 app = Flask(__name__)
+CORS(app)
 
 def get_forecast(months):
     past_dates = monthly_sales.index.strftime('%Y-%m-%d').tolist()
