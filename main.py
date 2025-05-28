@@ -23,19 +23,19 @@ def get_forecast(months):
     future_dates = pd.date_range(start='2018-01-31', periods=months, freq='ME').strftime('%Y-%m-%d').tolist()
     future_sales = [round(x) for x in model.forecast(steps=months).tolist()]
 
-    return past_dates, past_sales, future_dates, future_sales
+    past_data = [{"date": d, "value": v} for d, v in zip(past_dates, past_sales)]
+    future_data = [{"date": d, "value": v} for d, v in zip(future_dates, future_sales)]
+    return past_data, future_data
 
 @app.route('/forecast', methods=['POST'])
 def forecast_sales():
     data = request.get_json()
     months = int(data['months'])
-    past_dates, past_sales, future_dates, future_sales = get_forecast(months)
+    past_data, future_data = get_forecast(months)
 
     response = jsonify({
-        'past_dates': past_dates,
-        'past_sales': past_sales,
-        'future_dates': future_dates,
-        'future_sales': future_sales
+        'past_data': past_data,
+        'future_data': future_data,
     })
 
     response.headers.add('Access-Control-Allow-Origin', '*')
