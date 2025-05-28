@@ -19,9 +19,9 @@ CORS(app)
 
 def get_forecast(months):
     past_dates = monthly_sales.index.strftime('%Y-%m-%d').tolist()
-    past_sales = monthly_sales.values.tolist()
+    past_sales = [round(x) for x in monthly_sales.values.tolist()]
     future_dates = pd.date_range(start='2018-01-31', periods=months, freq='ME').strftime('%Y-%m-%d').tolist()
-    future_sales = model.forecast(steps=months).tolist()
+    future_sales = [round(x) for x in model.forecast(steps=months).tolist()]
 
     return past_dates, past_sales, future_dates, future_sales
 
